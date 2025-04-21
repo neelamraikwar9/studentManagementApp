@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>VA6.3_HW3</title>
+    <link
+      rel="stylesheet"
+      href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <header class="bg-body-tertiary">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Student Management</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a href="index.html" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="studentsList.html" class="nav-link">Student List</a>
+              </li>
+              <li class="nav-item">
+                <a href="addStudent.html" class="nav-link">Add Student</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container py-3">
+      <h1>Student List</h1>
+      <br />
+      <label for="gender">Filter by Gender:</label>
+      <select id="gender" class="form-control">
+        <option value="All">All</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+      <br />
+      <div id="messageCon"></div>
+      <ul id="studentsList" class="list-group"></ul>
+    </main>
+
+    <script>
+      const gender = document.querySelector("#gender");
+      const studentsList = document.querySelector("#studentsList");
+      const messageCon = document.querySelector("#messageCon");
+
+      const apiUrl = "https://student-data-Student-neoG-Ca.replit.app/students";
+
+      // function fetchData() {
+      //   studentsList.textContent = "Loading...";
+      //   fetch(apiUrl)
+      //     .then(function (response) {
+      //       return response.json();
+      //     })
+      //     .then(function (data) {
+      //       if (data) {
+      //         // console.log(data);
+      //         studentsList.textContent = "";
+      //         messageCon.textContent = "";
+
+      //         for (let i = 0; i < data.length; i++) {
+      //           const li = document.createElement("li");
+      //           li.className = "col-md-12 my-2";
+      //           li.innerHTML = `${data[i].name} - Age: ${data[i].age} - Attendence:${data[i].attendence} - Gender: ${data[i].gender} - Marks:${data[i].marks} <button class="btn btn-danger float-end" data-id="${data[i]._id}" id="deleteBtn">Delete</button>`;
+      //           studentsList.appendChild(li);
+      //         }
+      //       }
+      //       const deleteButtons = document.querySelectorAll("#deleteBtn");
+      //       for (let i = 0; i < deleteButtons.length; i++) {
+      //         deleteButtons[i].addEventListener("click", function (event) {
+      //           const studentId = event.target.getAttribute("data-id");
+      //           // console.log(studentId);
+
+      //           const apiDeleteUrl = `https://student-data-Student-neoG-Ca.replit.app/students/${studentId}`;
+
+      //           fetch(apiDeleteUrl, {
+      //             method: "DELETE",
+      //           })
+      //             .then(function (response) {
+      //               return response.json();
+      //             })
+      //             .then(function (data) {
+      //               if (data) {
+      //                 messageCon.textContent =
+      //                   "Student detail deleted successfully.";
+      //                 fetchData();
+      //               }
+      //             });
+      //         });
+      //       }
+      //     })
+      //     .catch(function (error) {
+      //       studentList.textContent =
+      //         "An error occured while fetching the data.";
+      //     });
+      // }
+      // fetchData();
+
+      // I don't want to remove above written code---------------.
+
+      function fetchData() {
+        studentsList.textContent = "Loading...";
+        fetch(apiUrl)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            if (data) {
+              // console.log(data);
+              updateGenderList(data);
+            }
+          })
+          .catch(function (error) {
+            studentsList.textContent = "An error occured while fetching data.";
+          });
+      }
+      fetchData();
+
+      function updateGenderList(data) {
+        if (data) {
+          messageCon.textContent = "";
+          studentsList.textContent = "";
+          for (let i = 0; i < data.length; i++) {
+            const li = document.createElement("li");
+            li.className = "col-md-12 my-2";
+            li.innerHTML = `${data[i].name} - Age: ${data[i].age} - Attendence:${data[i].attendence} - Gender: ${data[i].gender} - Marks:${data[i].marks} <button class="btn btn-danger float-end" data-id="${data[i]._id}" id="deleteBtn">Delete</button>`;
+            studentsList.appendChild(li);
+          }
+        }
+
+        const deleteButtons = document.querySelectorAll("#deleteBtn");
+        for (let i = 0; i < deleteButtons.length; i++) {
+          deleteButtons[i].addEventListener("click", function (event) {
+            const studentId = event.target.getAttribute("data-id");
+            console.log(studentId);
+
+            const apiDeleteUrl = `https://student-data-Student-neoG-Ca.replit.app/students/${studentId}`;
+
+            fetch(apiDeleteUrl, {
+              method: "DELETE",
+            })
+              .then(function (response) {
+                return response.json();
+              })
+              .then(function (data) {
+                if (data) {
+                  messageCon.textContent =
+                    "Student detail deleted successfully.";
+                  updateGenderList(data);
+                }
+              });
+          });
+        }
+      }
+      fetchData();
+
+      gender.addEventListener("change", applyGenderFilter);
+
+      function applyGenderFilter() {
+        const selectedGender = gender.value;
+        // console.log(selectedGender);
+
+        const genderSelected = [];
+
+        fetch(apiUrl)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            if (data) {
+              // console.log(data);
+              if (selectedGender !== "All") {
+                for (let i = 0; i < data.length; i++) {
+                  // console.log("inside for loop");
+                  if (data[i].gender === selectedGender) {
+                    // console.log("inside if condition...");
+                    genderSelected.push(data[i]);
+                  }
+                }
+                updateGenderList(genderSelected);
+              } else {
+                updateGenderList(data);
+              }
+            }
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>HTML + CSS</title>
+    <link
+      rel="stylesheet"
+      href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <header class="bg-body-tertiary">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand text-start py-0 mx-0" href="StudentManagement"
+            >Student Management</a
+          >
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a href="index.html" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="studentsList.html" class="nav-link">Student List</a>
+              </li>
+              <li class="nav-item">
+                <a href="addStudent.html" class="nav-link">Add Student</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main class="container py-5">
+      <h1>Add Student</h1>
+      <form id="studentDataForm">
+        <label for="name">Name:</label>
+        <br />
+        <input type="text" id="name" class="form-control" />
+        <br />
+
+        <label for="age">Age:</label>
+        <br />
+        <input type="number" id="age" class="form-control" />
+        <br />
+
+        <label for="gender">Gender:</label>
+        <select id="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <br />
+        <br />
+
+        <label for="grade">Grade:</label>
+        <br />
+        <input type="text" id="grade" class="form-control" />
+        <br />
+
+        <label for="marks">Marks:</label>
+        <br />
+        <input type="number" id="marks" class="form-control" />
+        <br />
+
+        <label for="attendance">Attendence:</label>
+        <br />
+        <input type="number" id="attendance" class="form-control" />
+        <br />
+
+        <button class="btn btn-primary">Add Student</button>
+      </form>
+      <br />
+      <div id="message"></div>
+    </main>
+
+    <script>
+      const studentDataForm = document.querySelector("#studentDataForm");
+      const name = document.querySelector("#name");
+      const age = document.querySelector("#age");
+      const gender = document.querySelector("#gender");
+      const grade = document.querySelector("#grade");
+      const marks = document.querySelector("#marks");
+      const attendance = document.querySelector("#attendance");
+
+      studentDataForm.addEventListener("submit", function () {
+        event.preventDefault();
+
+        const apiUrl =
+          "https://student-data-Student-neoG-Ca.replit.app/students";
+
+        const studentsData = {
+          name: name.value,
+          age: age.value,
+          gender: gender.value,
+          grade: grade.value,
+          marks: marks.value,
+          attendance: attendance.value,
+        };
+
+        fetch(apiUrl, {
+          method: "POST",
+          body: JSON.stringify(studentsData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            if (data) {
+              console.log(data);
+              message.textContent = "Student data added successfully.";
+            } else {
+              message.textContent = "Failed to add student's data.";
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
